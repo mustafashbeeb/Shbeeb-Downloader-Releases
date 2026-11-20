@@ -19,9 +19,14 @@ TARGET_FILE = Path("announcements.json")
 
 
 def clean(value: str, max_length: int, name: str) -> str:
-    if not isinstance(value, str) or not value.strip() or len(value) > max_length:
+    if not isinstance(value, str):
+        raise ValueError(f"Invalid {name}: expected text")
+    if name == "body":
+        value = value.replace("\r\n", "\n")
+    if not value.strip() or len(value) > max_length:
         raise ValueError(f"Invalid {name}: expected nonempty text of at most {max_length} chars")
-    if any(ord(ch) < 32 or ord(ch) == 127 for ch in value):
+    if any((ord(ch) < 32 and not (name == "body" and ch == "\n"))
+           or ord(ch) == 127 for ch in value):
         raise ValueError(f"Invalid {name}: control characters are not allowed")
     return value.strip()
 
