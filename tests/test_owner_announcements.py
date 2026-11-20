@@ -32,6 +32,14 @@ class OwnerAnnouncementPublisherTests(unittest.TestCase):
         self.assertEqual(notice["expiresAt"] - notice["startsAt"], 7 * 86400)
         self.assertTrue(notice["enabled"])
 
+    def test_multiline_text_is_safe_but_title_must_be_single_line(self):
+        notice = self.message(body="السطر الأول\nالسطر الثاني")
+        self.assertEqual(notice["body"], "السطر الأول\nالسطر الثاني")
+        with self.assertRaises(ValueError):
+            self.message(title="عنوان\nمزيف")
+        with self.assertRaises(ValueError):
+            self.message(body="نص\x01غير آمن")
+
     def test_new_publish_has_new_id_even_in_same_second(self):
         a, b = self.message(), self.message()
         self.assertNotEqual(a["messageId"], b["messageId"])
