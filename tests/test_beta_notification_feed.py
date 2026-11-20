@@ -11,7 +11,7 @@ SUMS = ROOT / "beta" / "SHA256SUMS.txt"
 
 OWNER_PRIVATE_RELEASE = (
     "https://github.com/mustafashbeeb/Shbeeb-Downloader/"
-    "releases/tag/untagged-2fc87efb09b13c838231"
+    "releases/tag/beta-permanent-v32-4880ff44504f"
 )
 
 class BetaNotificationOnlyTests(unittest.TestCase):
@@ -54,6 +54,7 @@ class BetaNotificationOnlyTests(unittest.TestCase):
         self.assertEqual(urls, [OWNER_PRIVATE_RELEASE])
         self.assertIn('rel="noopener noreferrer"', page)
         self.assertIn("المصرّح له", page)
+        self.assertNotIn("releases/tag/untagged-", page)
         self.assertIn("التحميل العام لم يُفعّل", page)
 
     def test_signed_hash_is_manifest_not_an_apk(self):
