@@ -112,6 +112,28 @@ class OwnerAnnouncementPublisherTests(unittest.TestCase):
             self.assertNotIn("هذا اختبار", result.stdout)
             self.assertFalse((Path(tmp) / "announcements.json").exists())
 
+    def test_blank_preview_uses_safe_demo_without_publishing(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            result = self.run_cli(tmp, "--mode", "preview")
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("built-in demo only", result.stdout)
+            self.assertIn("NO changes", result.stdout)
+            self.assertFalse((Path(tmp) / "announcements.json").exists())
+
+    def test_partial_preview_still_requires_both_fields(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            result = self.run_cli(tmp, "--mode", "preview",
+                                  "--title", "العنوان فقط")
+            self.assertNotEqual(result.returncode, 0)
+            self.assertFalse((Path(tmp) / "announcements.json").exists())
+
+    def test_publish_cannot_use_empty_demo_even_with_confirmation(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            result = self.run_cli(tmp, "--mode", "publish",
+                                  "--confirm", "PUBLISH")
+            self.assertNotEqual(result.returncode, 0)
+            self.assertFalse((Path(tmp) / "announcements.json").exists())
+
     def test_publish_requires_explicit_confirmation(self):
         with tempfile.TemporaryDirectory() as tmp:
             args = ("--mode", "publish", "--title", "مرحباً",
