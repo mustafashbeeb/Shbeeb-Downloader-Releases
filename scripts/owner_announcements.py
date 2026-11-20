@@ -5,7 +5,7 @@ This never distributes APKs, sends push notifications or collects users' data.
 Preview does not write or print message text to public action logs.
 """
 import argparse
-import hashlib
+import secrets
 import json
 import re
 from datetime import datetime, timedelta, timezone
@@ -39,7 +39,7 @@ def make_message(title, body, audience, category, duration_days, now=None):
     if now.tzinfo is None:
         raise ValueError("Clock must be timezone-aware")
     stamp = now.astimezone(timezone.utc)
-    code = hashlib.sha256((title + "\n" + body).encode("utf-8")).hexdigest()[:8]
+    code = secrets.token_hex(4)  # A newly approved message is new even if re-published this second.
     message_id = "owner-" + stamp.strftime("%Y%m%dT%H%M%S") + "-" + code
     return {
         "schema": 1,
