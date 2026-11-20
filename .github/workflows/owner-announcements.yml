@@ -17,7 +17,7 @@ on:
         required: false
         type: string
       body:
-        description: "Arabic message (max 500 characters), required for preview/publish"
+        description: "Arabic message (max 500 characters). Blank in PREVIEW = safe demo; PUBLISH requires your own message."
         required: false
         type: string
       audience:
