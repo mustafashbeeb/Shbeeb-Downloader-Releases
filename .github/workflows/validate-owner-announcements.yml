@@ -1,4 +1,4 @@
-name: Validate owner announcements — offline, no secrets
+name: Validate public BETA and owner notices — offline, no secrets
 
 on:
   push:
@@ -6,12 +6,16 @@ on:
     paths:
       - 'scripts/owner_announcements.py'
       - 'tests/test_owner_announcements.py'
+      - 'tests/test_beta_notification_feed.py'
+      - 'beta/**'
       - '.github/workflows/owner-announcements.yml'
       - '.github/workflows/validate-owner-announcements.yml'
   pull_request:
     paths:
       - 'scripts/owner_announcements.py'
       - 'tests/test_owner_announcements.py'
+      - 'tests/test_beta_notification_feed.py'
+      - 'beta/**'
       - '.github/workflows/owner-announcements.yml'
       - '.github/workflows/validate-owner-announcements.yml'
   workflow_dispatch:
