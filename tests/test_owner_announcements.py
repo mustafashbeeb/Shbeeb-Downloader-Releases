@@ -82,6 +82,27 @@ class OwnerAnnouncementPublisherTests(unittest.TestCase):
             capture_output=True, text=True, check=False,
         )
 
+    def test_public_preview_cannot_write_or_collect_messages(self):
+        root = Path(__file__).resolve().parents[1]
+        script = (root / "admin" / "preview.js").read_text(encoding="utf-8")
+        page = (root / "admin" / "preview.html").read_text(encoding="utf-8")
+        self.assertIn("textContent", script)
+        self.assertNotIn("fetch(", script)
+        self.assertNotIn("XMLHttpRequest(", script)
+        self.assertNotIn("localStorage", script)
+        self.assertIn("connect-src 'none'", page)
+        self.assertNotIn("ghp_", page)
+
+    def test_only_owner_can_publish_using_manual_workflow(self):
+        root = Path(__file__).resolve().parents[1]
+        wf = (root / ".github" / "workflows" / "owner-announcements.yml").read_text(
+            encoding="utf-8")
+        self.assertIn("github.actor == 'mustafashbeeb'", wf)
+        self.assertIn("github.ref == 'refs/heads/main'", wf)
+        self.assertIn("permissions:\n  contents: read", wf)
+        self.assertIn("if: inputs.mode == 'publish' || inputs.mode == 'disable'", wf)
+        self.assertIn("git add -- announcements.json", wf)
+
     def test_preview_has_no_persistent_side_effects(self):
         with tempfile.TemporaryDirectory() as tmp:
             result = self.run_cli(tmp, "--mode", "preview", "--title", "مرحباً",
