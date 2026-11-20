@@ -34,3 +34,5 @@ The future owner's general messages must use a **separate** verified file/schema
 - [اختبارات أمان النشر](tests/test_owner_announcements.py) و[فحص CI](.github/workflows/validate-owner-announcements.yml). لم يتم إثبات اختبار الهاتف، ولم يتم تشغيل Push. يجب مراجعة حالة اختبارات CI الحية قبل النشر.
 - `announcements.json` **غير منشور حالياً**؛ لا يُنشأ قبل تحديد المالك نص الرسالة وإجازة نشرها. المستخدِمون الحاليون على Beta 30 لا يستقبلون رسائل الإدارة قبل تثبيت إصدار جديد يحوي المستقبِل.
 - يجب تفعيل GitHub Pages عبر `Settings → Pages → Build and deployment → Deploy from a branch → main → / (root)`، ثم تأكيد HTTPS والصفحة الفعلية. لا تدخل مفاتيح GitHub أو كلمات مرور داخل المعاينة.
+
+- [دليل تفعيل Pages وكتابة ومعاينة ونشر/إيقاف الرسائل خطوة بخطوة](docs/OWNER_NOTICES_AR.md) — النشر محمي بحساب المالك فقط.
