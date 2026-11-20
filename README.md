@@ -25,3 +25,12 @@ This **public** repository is reserved for the owner-approved read-only announce
 5. Do not distribute the APK publicly or to third parties until the GPLv3/third-party licensing gate is resolved.
 
 The future owner's general messages must use a **separate** verified file/schema (e.g. `announcements.json`), with a protected publishing process, no browser-side GitHub token, and no dependency on the APK update feed. Push notifications are deferred to later versions.
+
+
+## Owner-authored in-app messages — preview and controlled publication
+
+- [معاينة الرسالة العربية](admin/preview.html): محرر محلي للعنوان والنص والجمهور والمدة؛ **صفحة عامة للمعاينة فقط، لا تقوم بالنشر ولا تحفظ أسراراً**. تتطلب عرضها من موقع Pages المنشور بعد تفعيله.
+- [نشر الرسالة أو إيقافها بحساب المالك فقط](.github/workflows/owner-announcements.yml): workflow يدوي مع اختيارات `preview` / `publish` / `disable` وكلمة تأكيد صريحة `PUBLISH` أو `DISABLE`؛ يكتب `announcements.json` فقط، ولا يلمس ملفات تحديث APK.
+- [اختبارات أمان النشر](tests/test_owner_announcements.py) و[فحص CI](.github/workflows/validate-owner-announcements.yml). لم يتم إثبات اختبار الهاتف، ولم يتم تشغيل Push. يجب مراجعة حالة اختبارات CI الحية قبل النشر.
+- `announcements.json` **غير منشور حالياً**؛ لا يُنشأ قبل تحديد المالك نص الرسالة وإجازة نشرها. المستخدِمون الحاليون على Beta 30 لا يستقبلون رسائل الإدارة قبل تثبيت إصدار جديد يحوي المستقبِل.
+- يجب تفعيل GitHub Pages عبر `Settings → Pages → Build and deployment → Deploy from a branch → main → / (root)`، ثم تأكيد HTTPS والصفحة الفعلية. لا تدخل مفاتيح GitHub أو كلمات مرور داخل المعاينة.
