@@ -86,11 +86,20 @@ def main():
             raise SystemExit("Refusing disable without exact DISABLE confirmation")
         message = disable_message()
     else:
-        message = make_message(
-            args.title, args.body, args.audience, args.category, args.duration_days
-        )
+        # An empty PREVIEW is a harmless workflow smoke-test, not publication.
+        # Substitute clearly labeled sample text only if BOTH fields are blank.
+        # A partially completed preview and every PUBLISH still require real
+        # owner-authored text; never publish samples or inferred content.
+        title, body = args.title, args.body
+        if args.mode == "preview" and not title.strip() and not body.strip():
+            title = "معاينة اختبارية فقط"
+            body = "هذه رسالة تجريبية للمعاينة فقط. لن يتم نشرها أو إرسالها لأي هاتف."
+            print("Blank preview fields: validating built-in demo only.")
         if args.mode == "publish" and args.confirm != "PUBLISH":
             raise SystemExit("Refusing publication without exact PUBLISH confirmation")
+        message = make_message(
+            title, body, args.audience, args.category, args.duration_days
+        )
 
     if args.mode == "preview":
         print("Preview validation successful. NO changes or messages published.")
