@@ -13,7 +13,7 @@ on:
           - publish
           - disable
       title:
-        description: "Arabic title (max 80 characters), required for preview/publish"
+        description: "Arabic title (max 80 characters). Blank in PREVIEW = safe demo; PUBLISH requires your own title."
         required: false
         type: string
       body:
