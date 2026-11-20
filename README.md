@@ -2,19 +2,19 @@
 
 This **public** repository is reserved for the owner-approved read-only announcement/update pages of Shbeeb Downloader.
 
-## Current status: preparation only
+## Current status: signed private BETA 32, metadata public
 
-- The repository exists and is public.
-- GitHub Pages must be configured and HTTPS verified separately.
-- **No `beta/android.json` release feed is published yet.** It must be generated only from a real signed Beta 31+ APK that passes the private verification workflow.
-- **No APK, signing key, secrets, tokens or private GitHub Actions artifacts** may be committed here.
-- There is no live Android Push service.
+- The repository is **public metadata-only**; GitHub Pages/HTTPS were previously verified by the owner on the phone for the Beta31 notification.
+- `beta/android.json` now advertises the **verified signed Beta32** (`0.3.11-beta`, code 32), whose private GitHub Release Draft includes `Shbeeb-BETA-v32.apk`. The owner-only Release page is linked from `beta/index.html`; GitHub requires a permitted signed-in account to view its assets.
+- No APK, signing key, secret, token or private GitHub Actions artifact is stored in this public repository.
+- The public site must never link directly to a distributable public APK while licensing issue #64 remains unresolved.
+- No Android OS Push service is claimed or provided.
 
-## Intended URLs (after Pages activation)
+## Live URLs (GitHub Pages)
 
 - Overview: `https://mustafashbeeb.github.io/Shbeeb-Downloader-Releases/`
-- Beta information: `https://mustafashbeeb.github.io/Shbeeb-Downloader-Releases/beta/`
-- **Future**, only after signed Beta 31 review: `https://mustafashbeeb.github.io/Shbeeb-Downloader-Releases/beta/android.json`
+- Beta 32 information and owner-only link: `https://mustafashbeeb.github.io/Shbeeb-Downloader-Releases/beta/`
+- In-app version feed: `https://mustafashbeeb.github.io/Shbeeb-Downloader-Releases/beta/android.json`
 
 ## Safe publishing checklist
 
