@@ -1,0 +1,49 @@
+name: Validate owner announcements — offline, no secrets
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/owner_announcements.py'
+      - 'tests/test_owner_announcements.py'
+      - '.github/workflows/owner-announcements.yml'
+      - '.github/workflows/validate-owner-announcements.yml'
+  pull_request:
+    paths:
+      - 'scripts/owner_announcements.py'
+      - 'tests/test_owner_announcements.py'
+      - '.github/workflows/owner-announcements.yml'
+      - '.github/workflows/validate-owner-announcements.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Syntax check and offline owner-publishing regression tests
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/owner_announcements.py
+          python -m unittest discover -s tests -v
+      - name: Reject accidentally committed Android binaries or signing secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git ls-files | grep -Ei '(^|/)([^/]*\.(apk|aab|jks|p12|keystore)|id_rsa|.*\.env)$'; then
+            echo "::error::Public repository contains a forbidden binary or secret-like file"
+            exit 1
+          fi
+          test ! -f beta/android.json || python - <<'PY'
+          import json
+          from pathlib import Path
+          feed=json.loads(Path("beta/android.json").read_text(encoding="utf-8"))
+          if any(k in feed for k in ("apkUrl", "apkBytes", "apkSha256")):
+              raise SystemExit("Refusing public APK metadata exposure")
+          PY
