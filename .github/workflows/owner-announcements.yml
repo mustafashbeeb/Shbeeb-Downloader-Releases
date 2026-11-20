@@ -1,0 +1,107 @@
+name: Owner announcements — preview, publish, disable (no Push)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Choose PREVIEW first. PUBLISH writes the read-only JSON; DISABLE withdraws it."
+        required: true
+        type: choice
+        default: preview
+        options:
+          - preview
+          - publish
+          - disable
+      title:
+        description: "Arabic title (max 80 characters), required for preview/publish"
+        required: false
+        type: string
+      body:
+        description: "Arabic message (max 500 characters), required for preview/publish"
+        required: false
+        type: string
+      audience:
+        description: "Channel that should display the message"
+        required: true
+        type: choice
+        default: beta
+        options:
+          - beta
+          - production
+          - all
+      category:
+        description: "Choose a neutral message category"
+        required: true
+        type: choice
+        default: general
+        options:
+          - general
+          - maintenance
+          - apps
+      duration_days:
+        description: "Visible for 1 to 90 days"
+        required: true
+        type: number
+        default: 7
+      confirm:
+        description: "For publish type PUBLISH; for disable type DISABLE. Blank for preview."
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: owner-announcements-publication
+  cancel-in-progress: false
+
+jobs:
+  owner-action:
+    # The repository is public; only its authenticated original owner may issue writes.
+    if: >-
+      github.repository == 'mustafashbeeb/Shbeeb-Downloader-Releases' &&
+      github.actor == 'mustafashbeeb' &&
+      github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout public metadata repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Validate and prepare message (no secrets, no Push)
+        env:
+          NOTICE_MODE: ${{ inputs.mode }}
+          NOTICE_TITLE: ${{ inputs.title }}
+          NOTICE_BODY: ${{ inputs.body }}
+          NOTICE_AUDIENCE: ${{ inputs.audience }}
+          NOTICE_CATEGORY: ${{ inputs.category }}
+          NOTICE_DAYS: ${{ inputs.duration_days }}
+          NOTICE_CONFIRM: ${{ inputs.confirm }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/owner_announcements.py \
+            --mode "$NOTICE_MODE" \
+            --title "$NOTICE_TITLE" \
+            --body "$NOTICE_BODY" \
+            --audience "$NOTICE_AUDIENCE" \
+            --category "$NOTICE_CATEGORY" \
+            --duration-days "$NOTICE_DAYS" \
+            --confirm "$NOTICE_CONFIRM"
+
+      - name: Publish only owner-confirmed read-only message metadata
+        if: inputs.mode == 'publish' || inputs.mode == 'disable'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f announcements.json
+          # No APKs, keys, executable HTML or additional files are staged.
+          git add -- announcements.json
+          git diff --cached --quiet && { echo "No changes"; exit 0; }
+          git config user.name "Shbeeb Owner Announcement Bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "docs(announcements): owner-approved announcement metadata"
+          git push origin HEAD:main
