@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; base-uri 'none'; object-src 'none'; form-action 'none'; connect-src 'none'; img-src 'none'">
+<title>Shbeeb Apps | معاينة رسائل الإدارة</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+*{box-sizing:border-box}body{margin:0;padding:20px;background:linear-gradient(155deg,#041126,#10375e);color:#eaf8ff;min-height:100vh;line-height:1.8}
+main{max-width:940px;margin:24px auto}h1{font-size:clamp(1.6rem,4vw,2.4rem);color:#6de5ff}
+h2{font-size:1.15rem;color:#a2f0ff}.pill{display:inline-block;background:#173d58;color:#ffdf9e;border-radius:30px;padding:3px 12px;font-size:.85rem}
+.panel{background:#0a2440;border:1px solid #35698b;border-radius:20px;padding:22px;margin:16px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+label{display:block;margin:10px 0 3px;font-weight:600}
+input,textarea,select{display:block;width:100%;padding:11px 13px;color:#eefaff;background:#061a32;border:1px solid #4282a4;border-radius:10px;font:inherit}
+textarea{min-height:140px;resize:vertical}input:focus,textarea:focus,select:focus{outline:2px solid #5eeaff;outline-offset:1px}
+.preview{background:#102f4e;border:1px solid #4b92ad;border-radius:17px;min-height:180px;padding:22px;overflow-wrap:anywhere;white-space:pre-wrap}
+.preview strong{display:block;font-size:1.16rem;margin-bottom:8px;color:#84eaff}.muted{color:#b8d0e4}
+button,.link{display:inline-block;cursor:pointer;background:#65e3f2;color:#042337;border:0;border-radius:11px;padding:10px 16px;font:inherit;font-weight:700;text-decoration:none;margin:8px 0}
+button:focus-visible,.link:focus-visible{outline:3px solid #ffd391;outline-offset:4px}
+#copyStatus{color:#b1f8c5;min-height:24px}
+</style>
+</head>
+<body><main>
+<header><span class="pill">Shbeeb Apps · معاينة فقط</span><h1>لوحة معاينة رسائل الإدارة</h1></header>
+<p class="muted">هذه أداة محلية داخل المتصفح لمراجعة شكل الرسالة. لا تحفظ النص على خادم، ولا ترسل إشعاراً، ولا تملك مفاتيح GitHub. النشر الحقيقي يتم حصراً من حساب المالك عبر GitHub Actions.</p>
+<div class="grid">
+<section class="panel">
+<h2>اكتب رسالتك</h2>
+<label for="title">عنوان الرسالة (حتى 80 حرفاً)</label>
+<input id="title" maxlength="80" value="رسالة من إدارة Shbeeb Apps" autocomplete="off">
+<label for="body">نص الرسالة (حتى 500 حرف)</label>
+<textarea id="body" maxlength="500">أهلاً بكم في Shbeeb Apps 💙
+شكراً لدعمكم وثقتكم.</textarea>
+<label for="audience">الجمهور</label>
+<select id="audience"><option value="beta">مستخدمو Beta</option><option value="production">النسخة الرسمية</option><option value="all">الجميع</option></select>
+<label for="category">الفئة</label>
+<select id="category"><option value="general">رسالة عامة</option><option value="maintenance">تنبيه صيانة</option><option value="apps">خبر عن تطبيقات شبيب</option></select>
+<label for="days">مدة العرض بالأيام (1 إلى 90)</label>
+<input id="days" type="number" min="1" max="90" value="7">
+</section>
+<section class="panel">
+<h2>كيف ستظهر داخل التطبيق</h2>
+<div class="preview" aria-live="polite">
+<strong id="previewTitle"></strong>
+<div id="previewBody"></div>
+</div>
+<p class="muted">تظهر الرسائل داخل التطبيق عند فحص خدمة الإدارة، وليست Push عندما يكون الهاتف مغلقاً.</p>
+<button id="copy" type="button">نسخ بيانات الرسالة</button>
+<p id="copyStatus" role="status"></p>
+<a class="link" href="https://github.com/mustafashbeeb/Shbeeb-Downloader-Releases/actions/workflows/owner-announcements.yml" target="_blank" rel="noopener noreferrer">الانتقال إلى النشر بحساب المالك</a>
+<p class="muted">اختر Run workflow ثم mode=preview للفحص أولاً. للنشر اختر publish واكتب PUBLISH، ولإيقاف رسالة سابقة اختر disable واكتب DISABLE. لا تستخدم هذا الرابط لنشر APK.</p>
+</section>
+</div>
+</main><script src="./preview.js" defer></script>
+</body></html>
